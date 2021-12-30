@@ -8,6 +8,8 @@ const getEntries = async (req, res) => {
 
     const [entries] = await connection.query("SELECT * FROM entries");
 
+    console.log(req.auth);
+
     res.send({ status: "ok", data: entries });
   } catch (err) {
     res.send({ status: "error", message: err.message });

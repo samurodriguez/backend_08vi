@@ -1,4 +1,5 @@
 const getDB = require("../../database/getDB");
+const createEntrySchema = require("../../schemas/createEntrySchema");
 
 const createEntry = async (req, res) => {
   let connection;
@@ -6,11 +7,13 @@ const createEntry = async (req, res) => {
   try {
     connection = await getDB();
 
-    const { titulo, descripcion } = req.body;
+    const { place, description } = req.body;
+
+    await createEntrySchema.validateAsync(req.body);
 
     const [{ insertId }] = await connection.query(
       "INSERT INTO entries (date, place, description, user_id) VALUES (?, ?, ?, ?)",
-      [new Date(), titulo, descripcion, 8]
+      [new Date(), place, description, req.auth.id]
     );
 
     res.send({

@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 
 const getDB = require("../../database/getDB");
+const emailPasswordSchema = require("../../schemas/emailPasswordSchema");
 
 const register = async (req, res) => {
   let connection;
@@ -9,6 +10,8 @@ const register = async (req, res) => {
     connection = await getDB();
 
     const { email, password } = req.body;
+
+    await emailPasswordSchema.validateAsync(req.body);
 
     const [users] = await connection.query(
       "SELECT * FROM users WHERE email = ?",
